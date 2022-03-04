@@ -10,13 +10,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class BaseConsumer {
 
-//    @Value("${kafka.consumer.groupid}")
-//    private static final String groupId=null;
-//
-//    @Value("#{'${topicOne:annotated1,foo}'.split(',')}")
-//    private String[] topics;
-
-    @KafkaListener(topics = "#{'${kafka.consumer.topics}'.split(',')}", groupId = "#{'${kafka.consumer.groupid}'}")
+    @KafkaListener(topics = "#{'${kafkacustom.consumer.topics}'.split(',')}", groupId = "#{'${kafkacustom.consumer.groupid}'}")
     public void receiveMessage(
             String payload
             ,@Header(KafkaHeaders.RECEIVED_TOPIC) String topic

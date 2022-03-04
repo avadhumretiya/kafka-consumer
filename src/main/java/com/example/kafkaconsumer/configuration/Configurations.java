@@ -1,5 +1,6 @@
 package com.example.kafkaconsumer.configuration;
 
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -7,6 +8,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Component;
@@ -18,11 +20,25 @@ import java.util.Map;
 @org.springframework.context.annotation.Configuration
 public class Configurations {
 
-    @Value("${kafka.url}")
+    //    @Value("${kafkacustom.url}")
+    @Value("${kafkacustom.url}")
     private String bootstrapAddress;
 
-    @Value("${kafka.consumer.groupid}")
+    @Value("${kafkacustom.consumer.groupid}")
     private String groupId;
+
+    @Value("${kafkacustom.consumer.topics}")
+    private String topic;
+
+    /*Start kafka topic configuration*/
+    @Bean
+    public NewTopic topicWithReplica() {
+        return TopicBuilder.name(topic)
+                .partitions(5)
+                .replicas(3)
+                .build();
+    }
+    /*Stop kafka topic configuration*/
 
     /*Start kafka consumer configuration*/
     @Bean
@@ -32,7 +48,7 @@ public class Configurations {
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-//        configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"latest");//earliest//latest
+        configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");//earliest//latest
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 
@@ -52,6 +68,7 @@ public class Configurations {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 

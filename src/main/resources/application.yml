@@ -1,14 +1,26 @@
-spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      auto-offset-reset: earliest
+#spring:
+#  kafka:
+#    consumer:
+#      bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093
+#      enable-auto-commit: false
+#      auto-offset-reset: latest
+#      group-id: "groupId"
+#      key-deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+#      value-serializer: "org.apache.kafka.common.serialization.StringDeserializer"
+#    producer:
+#      bootstrap-servers: 127.0.0.1:9092,127.0.0.1:9093
+#      properties:
+#        spring.json.trusted.packages: "*"
+#      value-serializer: "org.springframework.kafka.support.serializer.JsonSerializer"
+#      key-serializer: "org.apache.kafka.common.serialization.StringSerializer"
+#      retries: 5
 
-kafka:
-  url: "127.0.0.1:9092"
+kafkacustom:
+  url: 127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094
   consumer:
     groupid: "groupId"
-    topics: mytopic #put comma separated topics names
+    topics: replication
+    #mytopic #put comma separated topics names
 
 productrestapi:
   services:
@@ -16,3 +28,6 @@ productrestapi:
 
 server:
   port: '8082'
+
+error:
+  messages: "Exception in message sending"
